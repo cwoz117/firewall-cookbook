@@ -1,18 +1,16 @@
-# # encoding: utf-8
-
-# Inspec test for recipe firewall-cookbook::default
-
-# The Inspec reference, with examples and extensive documentation, can be
-# found at http://inspec.io/docs/reference/resources/
-
-unless os.windows?
-  # This is an example test, replace with your own test.
-  describe user('root'), :skip do
-    it { should exist }
-  end
+describe port(22) do
+  it { is_expected.to be_listening }
 end
 
-# This is an example test, replace it with your own test.
-describe port(80), :skip do
-  it { should_not be_listening }
+describe package('firewalld') do
+  it { is_expected.to be_installed }
+end
+
+describe service('firewalld') do
+  it { is_expected.to be_enabled }
+  it { is_expected.to be_running }
+end
+
+describe command('firewall-cmd --get-active-zones | grep work') do
+  its('stdout') { should eq "work\n" }
 end
